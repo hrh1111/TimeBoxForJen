@@ -1,0 +1,11 @@
+{
+  "pages":[
+    "pages/index/index"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#E76C66",
+    "navigationBarTitleText": "TimeBoxForJen",
+    "navigationBarTextStyle":"#40454E"
+  }
+}

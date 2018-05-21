@@ -1,0 +1,20 @@
+<import src="../../template/calendar/index.wxml"/>
+
+<view class="calendar-wrap">
+  <view>
+    <view class='v_user'>
+      <open-data class='userAvatar' animation="{{animationData}}" type="userAvatarUrl"></open-data>
+      <text class='tittle'>Jen的时间盒子</text>
+    </view>
+  </view>
+   <template is="calendar" data="{{...calendar}}" />
+   <view class='v_btn'>
+    <button class='btn btn_left' bindtap='leftBtnClick'>休</button>
+    <button class='btn btn_mid' bindtap='jump'>今天</button>
+    <button class='btn btn_right' bindtap='rightBtnClick'>班</button>
+   </view>
+   <view class='v_date'>{{date}} :</view>
+   <view class='v_msg'>
+    {{msg}}
+   </view>
+</view>
