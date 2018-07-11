@@ -39,6 +39,14 @@
   margin-left: 20rpx;
 }
 
+.dateSection {
+  font-size: 36rpx;
+  color: #E76C66;
+  float: right;
+  margin-right: 20rpx;
+  margin-top: 10rpx;
+}
+
 .work {
   background-color: #ff629a;
 }

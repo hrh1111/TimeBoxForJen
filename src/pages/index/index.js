@@ -9,6 +9,8 @@ const conf = {
         setDayMsg(currentSelect);
       }
     });
+
+    //旋转动画
     var animation = wx.createAnimation({
       duration: 2000,
       timingFunction: 'linear',
@@ -38,7 +40,11 @@ const conf = {
   data : {
     animationData : '',
     msg : '加油！',
-    date : ''
+    date : '',
+    initialDate : "2018-07-12",
+    dialogHidden : true,
+    msgInput : '',
+    msgInputFocus : false
   },
   leftBtnClick() {
     const day = getSelectedDay()[0];
@@ -75,6 +81,42 @@ const conf = {
       day.status = 'work';
       jumpToDay(day);
     }
-   }
+  },
+  bindDateChange(e){
+    const initialDate = e.detail.value;
+    this.setData({
+      'initialDate': initialDate
+    })
+    wx.setStorageSync('initialDate', new Date((initialDate + " 00:00:00").replace(/\-/g, "/")).getTime());
+    jumpToDay(getSelectedDay()[0]);    
+  },
+  openDialog(){
+    this.setData({
+      dialogHidden : !this.data.dialogHidden,
+      msgInputFocus : true
+    });
+  },
+  dialogCancel(){
+    this.setData({
+      dialogHidden: true,
+      msgInputFocus: false
+    })
+  },
+  dialogConfirm(){
+    this.setData({
+      dialogHidden : true,
+      msgInputFocus: false,
+      msg: this.data.msgInput
+    });
+    const day = getSelectedDay()[0];
+    const timestamp = (new Date(day.year, day.month - 1, day.day).getTime()).toString();
+    const key = "msg." + timestamp;
+    wx.setStorageSync(key, this.data.msgInput);
+  },
+  msgInputEvent(e){
+    this.setData({
+      msgInput : e.detail.value
+    })
+  }
 };
 Page(conf);

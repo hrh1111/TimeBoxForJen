@@ -5,6 +5,13 @@
     <view class='v_user'>
       <open-data class='userAvatar' animation="{{animationData}}" type="userAvatarUrl"></open-data>
       <text class='tittle'>Jen的时间盒子</text>
+      <view class="dateSection">  
+        <picker mode="date" value="{{initialDate}}" start="2001-01-01" end="2030-01-01" bindchange="bindDateChange">  
+          <view class="picker">  
+            设置  
+          </view>
+        </picker>
+      </view>
     </view>
   </view>
    <template is="calendar" data="{{...calendar}}" />
@@ -14,7 +21,11 @@
     <button class='btn btn_right' bindtap='rightBtnClick'>班</button>
    </view>
    <view class='v_date'>{{date}} :</view>
-   <view class='v_msg'>
+   <view class='v_msg' bindtap='openDialog'>
     {{msg}}
    </view>
+   <!--弹出框-->
+    <modal hidden="{{dialogHidden}}" title="请输入内容" confirm-text="提交" cancel-text="取消" bindcancel="dialogCancel" bindconfirm="dialogConfirm">
+        <input type='text' placeholder="加油！" bindinput="msgInputEvent" focus="{{msgInputFocus}}"/>
+    </modal>
 </view>

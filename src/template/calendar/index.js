@@ -339,7 +339,6 @@ const conf = {
   },
   //跳转到某一天
   jumpToDay(day) {
-    setDayMsg(day);
     const curYear = day.year;
     const curMonth = day.month;
     const curDate = day.day;
@@ -362,6 +361,7 @@ const conf = {
     conf.calculateDays.call(this, curYear, curMonth, curDate);
     conf.setDayMsg.call(this,days[0]);
   },
+  //为每一天添加状态
   addWorkStatus(days){
     const initialTime = conf.getInitialDate();
     const holiday = wx.getStorageSync('holidayList') || [];
@@ -376,15 +376,23 @@ const conf = {
       } else if (night.indexOf(timestamp) >= 0) {
         item.status = 'night'
       } else {
-        const diff = (timestamp - initialTime) / (1000 * 60 * 60 * 24) + 900;   
+        const diff = (timestamp - initialTime) / (1000 * 60 * 60 * 24) + 900;
         const status = diff % 6;
         item.status = ['work', 'work', 'night', 'night', 'holiday', 'holiday'][status];
       }
     })
   },
+  //初始化日期
   getInitialDate(){
-    return (new Date(2018, 4, 17)).getTime();
+    const initialDate = wx.getStorageSync('initialDate');
+    if (initialDate != ""){
+      return initialDate;
+    }else{
+      return (new Date(2018, 6, 12)).getTime();
+    }
+    //return (new Date(2018, 4, 31)).getTime();
   },
+  //设置每天的信息
   setDayMsg(day){
     const status = day.status;
     const hash = {
@@ -398,20 +406,45 @@ const conf = {
       'work': '今天工作日！努力加油元气满满！'
     }
     const currentDay = new Date(day.year,day.month-1,day.day).toLocaleDateString();
+    const timestamp = new Date(day.year, day.month - 1, day.day).getTime();
+    let msg = wx.getStorageSync('msg.' + timestamp);
     const today = new Date().toLocaleDateString();
-    if (today == currentDay) {
-      this.setData({
-        msg: hashToday[status]
-      })
+    if (msg != ""){
+
+    }else if (today == currentDay) {
+      msg = hashToday[status]
     } else {
-      this.setData({
-        msg: hash[status]
-      })
+      msg = hash[status]
     }
     this.setData({
-      date: `${day.month}月${day.day}日`
+      date: `${day.month}月${day.day}日`,
+      msg: msg
     })
   }
+  // setDayMsg(day) {
+  //   const status = day.status;
+  //   const hash = {
+  //     'night': '这天是夜班！注意休息哈！',
+  //     'holiday': '这天是假期！愿天气晴朗！',
+  //     'work': '这天工作日！祝工作顺利！'
+  //   }
+  //   const hashToday = {
+  //     'night': '今天上夜班！提前吃好睡好哈！',
+  //     'holiday': '今天是假期！一起去吃喝玩乐啊！',
+  //     'work': '今天工作日！努力加油元气满满！'
+  //   }
+  //   const currentDay = new Date(day.year, day.month - 1, day.day).toLocaleDateString();
+  //   const timestamp = new Date(day.year, day.month - 1, day.day).getTime();
+  //   const msg = wx.getStorageSync('msg.' + timestamp);
+  //   const today = new Date().toLocaleDateString();
+  //   if (msg == "") {
+  //     msg = today == currentDay ? hashToday[status] : hash[status];
+  //   };
+  //   this.setData({
+  //     date: `${day.month}月${day.day}日`,
+  //     msg: msg
+  //   })
+  // }
 };
 
 /**
@@ -467,19 +500,19 @@ export default (config = {}) => {
   });
   conf.jumpToToday.call(self);
 
-  const date = new Date();
-  const day = [{ day: date.getDate(), year: date.getFullYear(), month: date.getMonth() + 1}]
-  conf.addWorkStatus(day);
-  const status = day[0].status;
-  const hashToday = {
-    'night': '今天上夜班！提前吃好睡好哈！',
-    'holiday': '今天是假期！一起去吃喝玩乐啊！',
-    'work': '今天工作日！努力加油元气满满！'
-  }
-  const msg = hashToday[status];
-  self.setData({
-    'msg': msg,
-  });
+  // const date = new Date();
+  // const day = [{ day: date.getDate(), year: date.getFullYear(), month: date.getMonth() + 1}]
+  // conf.addWorkStatus(day);
+  // const status = day[0].status;
+  // const hashToday = {
+  //   'night': '今天上夜班！提前吃好睡好哈！',
+  //   'holiday': '今天是假期！一起去吃喝玩乐啊！',
+  //   'work': '今天工作日！努力加油元气满满！'
+  // }
+  // const msg = hashToday[status];
+  // self.setData({
+  //   'msg': msg,
+  // });
 
   const functionArray = [ 'tapDayItem', 'choosePrevMonth', 'chooseNextMonth', 'calendarTouchstart', 'calendarTouchmove' ];
   bindFunctionToPage.call(self, functionArray);
